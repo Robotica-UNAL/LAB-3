@@ -38,21 +38,27 @@ Zi = 570.92;
 
 T0=R.fkine([0 0 0 0 0 0])
 
-p=transl(0,100,0); %MTH
-p1=transl(305.52,Yi+L1,570.92);
-p2=T0*p;
-%s=R.ikine(p) %sacar los Q desde la MTH
-T_traj = ctraj(T0,p1,20);
-q_ctraj = R.ikunc(T_traj(:,:,:));
 
-ikine
+
+p1=transl(Xi,Yi+157.68,Zi-157.68);
+p2=transl(Xi+L1/3,Yi+157.68,Zi-157.68); 
+p3=transl(Xi+L1/3,Yi,Zi);
+p4=transl(Xi,Yi,Zi);
+
+T_traj = ctraj(T0,p1,20);
+T_traj2 = ctraj(p1,p2,20);
+T_traj3 = ctraj(p2,p3,20);
+T_traj4 = ctraj(p3,p4,20);
+
+q_ctraj = R.ikunc(T_traj(:,:,:));
+q_ctraj(21:40,:) = R.ikunc(T_traj2(:,:,:));
+q_ctraj(41:60,:) = R.ikunc(T_traj3(:,:,:));
+q_ctraj(61:80,:) = R.ikunc(T_traj4(:,:,:));
+
 
 
 figure
-quiver3(0,0,0,0,800,800);
-
-
-
+quiver3(Xi,Yi,Zi,0,400,400);
 hold on
 trplot(eye(4),'rgb')
 axis([-1000 1000 -1000 1000 0 1000])
@@ -63,6 +69,7 @@ for i=1:length(q_ctraj)
     %view(3)
     pause(0.5)
 end
+
 
 
 hold off
